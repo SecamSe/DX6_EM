@@ -9,17 +9,19 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.widget import Widget
 
+user = "0"
+
 class MyApp(App):
     def build(self):
-        dropdown = DropDown()
-        for i in range(15):
+        self.dropdown = DropDown()
+        self.dropdown.bind(on_select=lambda instance, x: setattr(self.mainbutton, 'text', x))
+        
+        for i in range(10):
             btn = Button(text='Хоз.орган %d' % i, size_hint_y=None, height=20)
-            btn.bind(on_release=lambda btn: dropdown.select(btn.text))
-            dropdown.add_widget(btn)
-        mainbutton = Button(text='Хоз.орган', size_hint=(None, None), height=20)
-        mainbutton.bind(on_release=dropdown.open)
-        dropdown.bind(on_select=lambda instance, x: setattr(mainbutton, 'text', x))
-
+            btn.bind(on_release=lambda btn: self.dropdown.select(btn.text))
+            self.dropdown.add_widget(btn)
+        self.mainbutton = Button(text='Хоз.орган 0', size_hint=(None, None), height=20, on_release=self.lista)
+        # mainbutton.bind(on_release=self.dropdown.open)
         bl = BoxLayout(orientation='vertical', padding = [5,5,5,5])
 
         blserver = BoxLayout(orientation='horizontal')
@@ -53,7 +55,7 @@ class MyApp(App):
                                    on_press = self.btn_test_press
                                    )
                             )
-        blserver.add_widget(mainbutton)
+        blserver.add_widget(self.mainbutton)
         bl.add_widget(blserver)
 
         blarea = BoxLayout(orientation = 'horizontal')
@@ -72,17 +74,23 @@ class MyApp(App):
         blzone = BoxLayout(orientation = 'vertical' )
         blarea.add_widget(blzone)
         bl.add_widget(blarea)
-
+ 
         return bl
+    
+    def lista(self,mainbutton):
+        self.dropdown.open(mainbutton)
+
 
     def btn_press(self, instance):
+        num_user = "00" + self.mainbutton.text[-1]
+        print(num_user)
         num_area = instance.text[7]
         if instance.background_color == [0, 0, 1, 1]:
-            if send(f'0101004E"ADM-CID"002AR00IPL000S[#00{self.num_object.text}|1401 0{num_area} 004]',self):
+            if send(f'0101004E"ADM-CID"002AR00IPL000S[#00{self.num_object.text}|1401 0{num_area} {num_user}]',self):
                 instance.text = f'Раздел {num_area} НА ОХРАНЕ\nнажми для снятия'
                 instance.background_color = 'green'
         else:
-            if send(f'0101004E"ADM-CID"002AR00IPL000S[#00{self.num_object.text}|3401 0{num_area} 004]',self):
+            if send(f'0101004E"ADM-CID"002AR00IPL000S[#00{self.num_object.text}|3401 0{num_area} {num_user}]',self):
                 instance.text = f'Раздел {num_area} СНЯТ\nнажми для охраны'
                 instance.background_color = 'blue'
 
