@@ -31,7 +31,7 @@ class MyApp(App):
         self.server = TextInput(multiline=False,
                             height=30, width=165,
                             size_hint_y=None, size_hint_x=None,
-                            text='127.0.0.1:8097'
+                            text='90.188.113.164:8097'
                            )
         blserver.add_widget(self.server)
 
