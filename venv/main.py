@@ -9,10 +9,10 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.widget import Widget
 
-user = "0"
 
 class MyApp(App):
     def build(self):
+        
         self.dropdown = DropDown()
         self.dropdown.bind(on_select=lambda instance, x: setattr(self.mainbutton, 'text', x))
         
@@ -20,7 +20,7 @@ class MyApp(App):
             btn = Button(text='Хоз.орган %d' % i, size_hint_y=None, height=20)
             btn.bind(on_release=lambda btn: self.dropdown.select(btn.text))
             self.dropdown.add_widget(btn)
-        self.mainbutton = Button(text='Хоз.орган 0', size_hint=(None, None), height=20, on_release=self.lista)
+        self.mainbutton = Button(text='Хоз.орган 0', size_hint=(None, None), height = 30, width = 120, on_release=self.lista)
         # mainbutton.bind(on_release=self.dropdown.open)
         bl = BoxLayout(orientation='vertical', padding = [5,5,5,5])
 
@@ -50,11 +50,33 @@ class MyApp(App):
         blserver.add_widget(self.num_object)
 
         blserver.add_widget(Button(text = 'test none',
-                                   height = 30, width = 100,
+                                   height = 30, width = 120,
                                    size_hint_y = None, size_hint_x = None,
                                    on_press = self.btn_test_press
                                    )
                             )
+        blserver.add_widget(Button(text = 'Tamper close',
+                                   height = 30, width = 120,
+                                   size_hint_y = None, size_hint_x = None,
+                                   background_color = 'green',
+                                   on_press = self.btn_tamper_press
+                                   )
+                            )
+        blserver.add_widget(Button(text = '220 ON',
+                                   height = 30, width = 120,
+                                   size_hint_y = None, size_hint_x = None,
+                                   background_color = 'green',
+                                   on_press = self.btn_220_press
+                                   )
+                            )
+        blserver.add_widget(Button(text = 'Battery OK',
+                                   height = 30, width = 120,
+                                   size_hint_y = None, size_hint_x = None,
+                                   background_color = 'green',
+                                   on_press = self.btn_battery_press
+                                   )
+                            )
+        
         blserver.add_widget(self.mainbutton)
         bl.add_widget(blserver)
 
@@ -83,7 +105,6 @@ class MyApp(App):
 
     def btn_press(self, instance):
         num_user = "00" + self.mainbutton.text[-1]
-        print(num_user)
         num_area = instance.text[7]
         if instance.background_color == [0, 0, 1, 1]:
             if send(f'0101004E"ADM-CID"002AR00IPL000S[#00{self.num_object.text}|1401 0{num_area} {num_user}]',self):
@@ -101,6 +122,36 @@ class MyApp(App):
         else:
             instance.text = 'test fail'
             instance.background_color = 'red'
+
+    def btn_tamper_press(self, instance):
+        if instance.text == "Tamper close":
+            if send(f'0101004E"ADM-CID"002AR00IPL000S[#00{self.num_object.text}|1137 00 000]',self):
+                instance.text = 'Tamper open'
+                instance.background_color = 'red'
+        else:
+            if send(f'0101004E"ADM-CID"002AR00IPL000S[#00{self.num_object.text}|3137 00 000]',self):
+                instance.text = 'Tamper close'
+                instance.background_color = 'green'
+
+    def btn_220_press(self, instance):
+        if instance.text == "220 ON":
+            if send(f'0101004E"ADM-CID"002AR00IPL000S[#00{self.num_object.text}|1301 00 000]',self):
+                instance.text = '220 OFF'
+                instance.background_color = 'red'
+        else:
+            if send(f'0101004E"ADM-CID"002AR00IPL000S[#00{self.num_object.text}|3301 00 000]',self):
+                instance.text = '220 ON'
+                instance.background_color = 'green'
+
+    def btn_battery_press(self, instance):
+        if instance.text == "Battery OK":
+            if send(f'0101004E"ADM-CID"002AR00IPL000S[#00{self.num_object.text}|1302 00 000]',self):
+                instance.text = 'Battery BAD'
+                instance.background_color = 'red'
+        else:
+            if send(f'0101004E"ADM-CID"002AR00IPL000S[#00{self.num_object.text}|3302 00 000]',self):
+                instance.text = 'Battery OK'
+                instance.background_color = 'green'
 
 
 def send(msg,self):
