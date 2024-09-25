@@ -10,9 +10,8 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.widget import Widget
 
 
-class MyApp(App):
+class DX6_EM(App):
     def build(self):
-        
         self.dropdown = DropDown()
         self.dropdown.bind(on_select=lambda instance, x: setattr(self.mainbutton, 'text', x))
         
@@ -27,25 +26,25 @@ class MyApp(App):
         blserver = BoxLayout(orientation='horizontal')
         blserver.add_widget(Label(text = 'Сервер:',
                                   size_hint_y=None, size_hint_x=None,
-                                  height=30, width=60,
+                                  height=30, width=65,
                                   )
                             )
         self.server = TextInput(multiline=False,
-                            height=30, width=165,
-                            size_hint_y=None, size_hint_x=None,
-                            text='90.188.113.164:8097'
-                           )
+                                height=30, width=180,
+                                size_hint_y=None, size_hint_x=None,
+                                text='90.188.113.164:8097'
+                               )
         blserver.add_widget(self.server)
 
         blserver.add_widget(Label(text='№ Объекта:',
                                   size_hint_y=None, size_hint_x=None,
-                                  height=30, width=90,
+                                  height=30, width=100,
                                   )
                             )
         self.num_object = TextInput(multiline=False,
-                                height=30, width=50,
-                                size_hint_y=None, size_hint_x=None,
-                                text='9999'
+                                    height=30, width=55,
+                                    size_hint_y=None, size_hint_x=None,
+                                    text='9999'
                                    )
         blserver.add_widget(self.num_object)
 
@@ -84,11 +83,11 @@ class MyApp(App):
         gl = GridLayout(cols = 1, padding = [0,5,0,0],spacing = 3)
         for i in range(1,9):
             gl.add_widget(Button(text = 'Раздел %d СНЯТ\nнажми для охраны' % i,
-                            font_size = 12,
-                            height=35, width=200,
-                            size_hint_y=None, size_hint_x=None,
-                            on_press = self.btn_press,
-                            background_color = [0, 0 ,1 ,1]
+                                font_size = 12,
+                                height=35, width=200,
+                                size_hint_y=None, size_hint_x=None,
+                                on_press = self.btn_press,
+                                background_color = [0, 0 ,1 ,1]
                                  )
                           )
 
@@ -175,7 +174,7 @@ def send(msg,self):
 
 
 def main():
-    MyApp().run()
+    DX6_EM().run()
 
 
 if __name__ == '__main__':
